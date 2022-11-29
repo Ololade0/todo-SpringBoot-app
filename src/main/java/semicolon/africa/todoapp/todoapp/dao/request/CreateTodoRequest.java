@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class CreateTodoRequest {
-    private Long todoId;
+    private Long userId;
     private String todo;
     private String description;
     private Date createdAt;
