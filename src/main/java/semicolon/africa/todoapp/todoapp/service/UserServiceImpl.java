@@ -1,2 +1,7 @@
-package semicolon.africa.todoapp.todoapp.service;public class UserServiceImpl {
+package semicolon.africa.todoapp.todoapp.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserServiceImpl implements UserService {
 }
