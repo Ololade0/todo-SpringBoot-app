@@ -53,6 +53,7 @@ class UserServiceImplTest {
     @AfterEach
     void tearDown() {
         userService.deleteAllUsers();
+        userService.deleteAll();
     }
 
     @Test
@@ -75,7 +76,7 @@ class UserServiceImplTest {
                 .phoneNumber("08109093828")
                 .build();
       registeredUser =  userService.registerUser(registerUserRequest);
-        assertEquals(1L, userService.getTotalUsers());
+        assertEquals(2L, userService.getTotalUsers());
         assertThat(registeredUser.getUserId()).isNotNull();
         assertEquals(200, registeredUser.getCode());
 
@@ -143,13 +144,56 @@ class UserServiceImplTest {
     public void UserCanFindTodoById() throws TodoCollecttionException, UserCannotBeFoundException {
         FindTodoByIdRequest findTodoByIdRequest = FindTodoByIdRequest.builder()
                         .todoId(response.getId())
-//                        .UserId(registeredUser.getUserId())
+                        .UserId(registeredUser.getUserId())
                         .build();
     Todo foundTodo =     userService.findTodoById(findTodoByIdRequest);
     assertThat(foundTodo.getTodoId()).isNotNull();
 
-
     }
+
+    @Test
+    public void UserCanFindAllTodo() throws UserCannotBeFoundException {
+        FindAllTodoRequest findAllTodoRequest = FindAllTodoRequest
+                .builder()
+                .userId(registeredUser.getUserId())
+                .numberOfPerPages(1)
+                .pageNumber(1)
+                .build();
+       Page<Todo> page = userService.findAllTodo(findAllTodoRequest);
+        assertThat(page.getTotalElements()).isNotNull();
+       assertEquals(1L, userService.findAllTodo(findAllTodoRequest).getTotalElements());
+    }
+
+    @Test
+    public void UserCanDeleteAllTodo(){
+        DeleteTodoRequest deleteTodoRequest = DeleteTodoRequest.builder()
+                .userId(registeredUser.getUserId())
+                .todoId(response.getId())
+                .build();
+        userService.deleteAllTodo(deleteTodoRequest);
+        assertEquals(0, userService.getTotaalTodo());
+    }
+    @Test
+    public void UserCanDeletedById() throws TodoCollecttionException, UserCannotBeFoundException {
+
+        CreateTodoRequest createTodoRequest = CreateTodoRequest
+                .builder()
+                .userId(registeredUser.getUserId())
+                .todo("My Todo")
+                .description("My description")
+                .isCompleted(true)
+                .createdAt(new Date(System.currentTimeMillis()))
+                .build();
+        response = userService.createTodo(createTodoRequest);
+        DeleteTodoIdRequest deleteTodoIdRequest = DeleteTodoIdRequest
+                .builder()
+                .todoId(response.getId())
+                .userId(registeredUser.getUserId())
+                .build();
+        userService.deleteToDoById(deleteTodoIdRequest);
+        assertEquals(0, userService.getTotaalTodo());
+    }
+
 
 
 }

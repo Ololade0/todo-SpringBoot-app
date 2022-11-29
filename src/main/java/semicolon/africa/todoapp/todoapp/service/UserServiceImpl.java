@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import semicolon.africa.todoapp.todoapp.dao.request.*;
 import semicolon.africa.todoapp.todoapp.dao.response.CreateTodoResponse;
+import semicolon.africa.todoapp.todoapp.dao.response.DeleteCourseResponse;
 import semicolon.africa.todoapp.todoapp.dao.response.RegisterUserResponse;
 import semicolon.africa.todoapp.todoapp.dao.response.UpdateUserProfileResponse;
 import semicolon.africa.todoapp.todoapp.dto.model.Todo;
@@ -15,6 +16,7 @@ import semicolon.africa.todoapp.todoapp.dto.repository.UserRepository;
 import semicolon.africa.todoapp.todoapp.exception.TodoCollecttionException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -141,5 +143,58 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest) throws UserCannotBeFoundException {
+        Optional<User> foundUser = userRepository.findById(findAllTodoRequest.getUserId());
+        if(foundUser.isPresent()){
+            return todoService.findAllTodo(findAllTodoRequest);
+        }
+        else {
+            throw new UserCannotBeFoundException(UserCannotBeFoundException.notFoundExeception(findAllTodoRequest.getUserId()));
+        }
+    }
 
-}
+    @Override
+    public String deleteAllTodo(DeleteTodoRequest deleteTodoRequest) {
+        Optional<User> foundUser = userRepository.findById(deleteTodoRequest.getUserId());
+        if(foundUser.isPresent())
+            todoService.deleteAll();
+         return "Todo successfully deleted";
+
+    }
+
+    @Override
+    public long getTotaalTodo() {
+        return todoService.sizeOfTodo();
+    }
+
+    @Override
+    public void deleteAll() {
+        todoService.deleteAll();
+
+    }
+
+    @Override
+    public DeleteCourseResponse deleteToDoById(DeleteTodoIdRequest deleteTodoIdRequest) throws TodoCollecttionException {
+        Optional<User> foundUser = userRepository.findById(deleteTodoIdRequest.getUserId());
+        if(foundUser.isPresent()){
+            List<Todo> todoList = foundUser.get().getTodoList();
+            for (int i = 0; i < todoList.size() ; i++) {
+                if(todoList.get(i).getTodoId().equals(deleteTodoIdRequest.getTodoId())){
+                    todoService.deleteById(deleteTodoIdRequest.getTodoId());
+                    foundUser.get().getTodoList().remove(todoList.get(i));
+                    userRepository.save(foundUser.get());
+                }
+
+            }
+        }
+
+        return DeleteCourseResponse.builder()
+                .message("Course successfully deleted")
+                .build();
+
+    }
+    }
+
+
+
