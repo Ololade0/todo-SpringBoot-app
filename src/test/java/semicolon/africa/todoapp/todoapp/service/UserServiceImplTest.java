@@ -13,7 +13,7 @@ import semicolon.africa.todoapp.todoapp.dao.response.UpdateTodoResponse;
 import semicolon.africa.todoapp.todoapp.dao.response.UpdateUserProfileResponse;
 import semicolon.africa.todoapp.todoapp.dto.model.Todo;
 import semicolon.africa.todoapp.todoapp.dto.model.User;
-import semicolon.africa.todoapp.todoapp.exception.TodoCollecttionException;
+import semicolon.africa.todoapp.todoapp.exception.TodoException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 
 import java.util.Date;
@@ -35,6 +35,7 @@ class UserServiceImplTest {
                 .firstName("Ololade")
                 .lastName("Oluwatosin")
                 .email("adesuyiololade@gmail.com")
+                .password("1234")
                 .phoneNumber("08109093828")
                 .build();
          registeredUser =  userService.registerUser(registerUserRequest);
@@ -73,6 +74,7 @@ class UserServiceImplTest {
                 .builder()
                 .firstName("Ololade")
                 .lastName("Oluwatosin")
+                .password("1234")
                 .email("adesuyiololade@gmail.com")
                 .phoneNumber("08109093828")
                 .build();
@@ -115,12 +117,13 @@ class UserServiceImplTest {
     public void usersProfileCanBeUpdated() throws UserCannotBeFoundException {
         UpdateUserProfileRequest updateUserProfileRequest = UpdateUserProfileRequest
                 .builder()
+                .userId(registeredUser.getUserId())
                 .email("jummy@gmail.com")
                 .firstName("Iseoluwa")
                 .lastName("Pelumi")
                 .phoneNumber("09031807593")
                 .build();
-      UpdateUserProfileResponse updateUserProfileResponse = userService.updateUserProfile(updateUserProfileRequest, registeredUser.getUserId());
+      UpdateUserProfileResponse updateUserProfileResponse = userService.updateUserProfile(updateUserProfileRequest);
         assertThat(updateUserProfileResponse.getId()).isNotNull();
         assertEquals("Profile successfully updated", updateUserProfileResponse.getMessage());
 
@@ -142,7 +145,7 @@ class UserServiceImplTest {
         assertEquals("Todo successfully created", response.getMessage());
     }
     @Test
-    public void UserCanFindTodoById() throws TodoCollecttionException, UserCannotBeFoundException {
+    public void UserCanFindTodoById() throws TodoException, UserCannotBeFoundException {
         FindTodoByIdRequest findTodoByIdRequest = FindTodoByIdRequest.builder()
                         .todoId(response.getId())
                         .UserId(registeredUser.getUserId())
@@ -175,7 +178,7 @@ class UserServiceImplTest {
         assertEquals(0, userService.getTotaalTodo());
     }
     @Test
-    public void UserCanDeletedById() throws TodoCollecttionException, UserCannotBeFoundException {
+    public void UserCanDeletedById() throws TodoException, UserCannotBeFoundException {
         DeleteTodoIdRequest deleteTodoIdRequest = DeleteTodoIdRequest
                 .builder()
                 .todoId(response.getId())
@@ -187,7 +190,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    public void userCanUpdateTodo() throws TodoCollecttionException {
+    public void userCanUpdateTodo() throws TodoException, UserCannotBeFoundException {
         UpdateTodoRequest updateTodoRequest = UpdateTodoRequest
                 .builder()
                 .todo("Ololade's Todo")
@@ -195,7 +198,7 @@ class UserServiceImplTest {
                 .description("Ololades Description")
                 .isCompleted(false)
                 .build();
-    UpdateTodoResponse updateUserProfileResponse= userService.updateTodoss(updateTodoRequest,response.getId());
+    UpdateTodoResponse updateUserProfileResponse= userService.updateTodo(updateTodoRequest,response.getId());
         assertThat(updateUserProfileResponse.getId()).isNotNull();
         assertEquals("Todo successfully updated", updateUserProfileResponse.getMessage());
        assertEquals("Ololade's Todo", updateUserProfileResponse.getTodo());

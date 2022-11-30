@@ -1,7 +1,7 @@
 package semicolon.africa.todoapp.todoapp.exception;
 
-public class TodoCollecttionException extends Throwable {
-    public TodoCollecttionException(String message) {
+public class TodoException extends RuntimeException {
+    public TodoException(String message) {
         super(message);
     }
 

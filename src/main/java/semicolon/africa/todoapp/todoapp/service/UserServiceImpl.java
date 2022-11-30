@@ -1,43 +1,52 @@
 package semicolon.africa.todoapp.todoapp.service;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 import semicolon.africa.todoapp.todoapp.dao.request.*;
 import semicolon.africa.todoapp.todoapp.dao.response.*;
+import semicolon.africa.todoapp.todoapp.dto.model.Role;
 import semicolon.africa.todoapp.todoapp.dto.model.Todo;
 import semicolon.africa.todoapp.todoapp.dto.model.User;
 import semicolon.africa.todoapp.todoapp.dto.repository.UserRepository;
-import semicolon.africa.todoapp.todoapp.exception.TodoCollecttionException;
+import semicolon.africa.todoapp.todoapp.exception.TodoException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private TodoService todoService;
+
+    private final UserRepository userRepository;
+
+    private final TodoService todoService;
+
+//    private final PasswordEncoder passwordEncoder;
+
     @Override
     public RegisterUserResponse registerUser(RegisterUserRequest registerUserRequest) {
         User user = User.builder()
                 .firstName(registerUserRequest.getFirstName())
                 .lastName(registerUserRequest.getLastName())
-                .email(registerUserRequest.getEmail())
                 .phoneNumber(registerUserRequest.getPhoneNumber())
+                .email(registerUserRequest.getEmail())
+                .password(registerUserRequest.getPassword())
+//                .password(passwordEncoder.encode(registerUserRequest.getPassword()))
+                .role(Role.USER)
                 .build();
-        User registeredUser = userRepository.save(user);
 
+        User registeredUser = userRepository.save(user);
         return RegisterUserResponse
                 .builder()
                 .message("User successfully registered")
-                .code(200)
+                               .code(200)
+
                 .userId(registeredUser.getUserId())
                 .build();
     }
@@ -48,8 +57,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteAllUsers() {
+    public String deleteAllUsers() {
         userRepository.deleteAll();
+        return "ALl Users successfully deleted";
 
     }
 
@@ -68,10 +78,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteById(Long userId) throws UserCannotBeFoundException {
+    public String deleteById(Long userId) throws UserCannotBeFoundException {
        Optional<User> foundUser = userRepository.findById(userId);
        if(foundUser.isPresent()){
            userRepository.deleteById(userId);
+           return "User successfully deleted";
 
        }
       else {
@@ -84,10 +95,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UpdateUserProfileResponse updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest, Long userId) throws UserCannotBeFoundException {
-        Optional<User> foundUser = userRepository.findById(userId);
+    public UpdateUserProfileResponse updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest) throws UserCannotBeFoundException {
+        Optional<User> foundUser = userRepository.findById(updateUserProfileRequest.getUserId());
         if(foundUser.isEmpty()) {
-            throw new UserCannotBeFoundException(UserCannotBeFoundException.notFoundExeception(userId));
+            throw new UserCannotBeFoundException(UserCannotBeFoundException.notFoundExeception(null));
         }
         else {
             if(updateUserProfileRequest.getFirstName()!= null){
@@ -105,12 +116,11 @@ public class UserServiceImpl implements UserService {
             userRepository.save(foundUser.get());
 
         }
-        UpdateUserProfileResponse updateUserProfileResponse = UpdateUserProfileResponse
+        return UpdateUserProfileResponse
                 .builder()
                 .message("Profile successfully updated")
                 .id(foundUser.get().getUserId())
                 .build();
-        return updateUserProfileResponse;
 
     }
 
@@ -131,7 +141,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Todo findTodoById(FindTodoByIdRequest findTodoByIdRequest) throws TodoCollecttionException, UserCannotBeFoundException {
+    public Todo findTodoById(FindTodoByIdRequest findTodoByIdRequest) throws TodoException, UserCannotBeFoundException {
         Optional<User> foundUser = userRepository.findById(findTodoByIdRequest.getUserId());
         if(foundUser.isPresent()){
            return todoService.findTodoById(findTodoByIdRequest.getTodoId());
@@ -174,11 +184,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public DeleteCourseResponse deleteToDoById(DeleteTodoIdRequest deleteTodoIdRequest) throws TodoCollecttionException {
+    public DeleteTodoResponse deleteToDoById(DeleteTodoIdRequest deleteTodoIdRequest) throws TodoException, UserCannotBeFoundException {
         log.info("request --> {}", deleteTodoIdRequest);
-        todoService.deleteById(deleteTodoIdRequest.getTodoId());
-        return DeleteCourseResponse.builder()
-                .message("Course successfully deleted")
+        User user = userRepository.findUserByUserId(deleteTodoIdRequest.getUserId());
+        if(user!=null) {
+            todoService.deleteById(deleteTodoIdRequest.getTodoId());
+        }
+        else {
+            throw new UserCannotBeFoundException(UserCannotBeFoundException.notFoundExeception(deleteTodoIdRequest.getUserId()));
+        }
+        return DeleteTodoResponse.builder()
+                .message("Todo successfully deleted")
                 .build();
 
 
@@ -186,10 +202,13 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UpdateTodoResponse updateTodoss(UpdateTodoRequest updateTodoRequest, Long id) throws TodoCollecttionException {
+    public UpdateTodoResponse updateTodo(UpdateTodoRequest updateTodoRequest, Long id) throws TodoException, UserCannotBeFoundException {
       Todo foundTodo =  todoService.updateTodo(updateTodoRequest, id);
        User foundUser =  userRepository.findUserByUserId(updateTodoRequest.getUserId());
-        if(foundUser!= null){
+       if(foundUser == null){
+           throw new UserCannotBeFoundException(UserCannotBeFoundException.notFoundExeception(id));
+       }
+       else{
             foundUser.getTodoList().add(foundTodo);
             userRepository.save(foundUser);
         }
@@ -202,7 +221,10 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
+    @Override
+    public User findByEmail(String username) {
+        return userRepository.findByEmail(username);
+    }
 
 
 }

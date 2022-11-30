@@ -1,7 +1,5 @@
 package semicolon.africa.todoapp.todoapp.service;
 
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,11 +10,9 @@ import semicolon.africa.todoapp.todoapp.dao.request.CreateTodoRequest;
 import semicolon.africa.todoapp.todoapp.dao.request.FindAllTodoRequest;
 import semicolon.africa.todoapp.todoapp.dao.request.UpdateTodoRequest;
 import semicolon.africa.todoapp.todoapp.dto.model.Todo;
-import semicolon.africa.todoapp.todoapp.exception.TodoCollecttionException;
+import semicolon.africa.todoapp.todoapp.exception.TodoException;
 
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -70,7 +66,7 @@ class TodoServiceImplTest {
 
     }
     @Test
-    public void findTodoById() throws TodoCollecttionException {
+    public void findTodoById() throws TodoException {
         Todo foundTodo = todoService.findTodoById(savedTodo.getTodoId());
         assertThat(foundTodo.getTodoId()).isEqualTo(savedTodo.getTodoId());
     }
@@ -94,20 +90,20 @@ class TodoServiceImplTest {
     }
 
     @Test
-    public void findTodoBYTodo() throws TodoCollecttionException {
+    public void findTodoBYTodo() throws TodoException {
         Todo foundTodo =   todoService.findByTodo(savedTodo.getTodo());
         assertEquals("My todo", foundTodo.getTodo());
     }
 
 
     @Test
-    public void deleteTodoById() throws TodoCollecttionException {
+    public void deleteTodoById() throws TodoException {
         todoService.deleteById(savedTodo.getTodoId());
         assertEquals(0, todoService.sizeOfTodo());
     }
 
     @Test
-    public void updateTodo() throws TodoCollecttionException {
+    public void updateTodo() throws TodoException {
         FindAllTodoRequest findAllTodoRequest = FindAllTodoRequest
                 .builder()
                 .numberOfPerPages(8)

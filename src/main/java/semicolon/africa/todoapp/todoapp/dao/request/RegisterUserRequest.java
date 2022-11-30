@@ -1,6 +1,7 @@
 package semicolon.africa.todoapp.todoapp.dao.request;
 
 import lombok.*;
+import semicolon.africa.todoapp.todoapp.dto.model.Role;
 
 @Setter
 @Getter
@@ -13,4 +14,5 @@ public class RegisterUserRequest {
     private String lastName;
     private String email;
     private String phoneNumber;
+    private String password;
 }

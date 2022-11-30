@@ -21,6 +21,10 @@ public class User {
     private String lastName;
     private String email;
     private String phoneNumber;
+    private String password;
+    private boolean isEnabled;
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Todo> todoList = new ArrayList<>();
+    private Role role;
+
 }

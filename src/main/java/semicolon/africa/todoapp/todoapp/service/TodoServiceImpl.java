@@ -10,7 +10,7 @@ import semicolon.africa.todoapp.todoapp.dao.request.FindAllTodoRequest;
 import semicolon.africa.todoapp.todoapp.dao.request.UpdateTodoRequest;
 import semicolon.africa.todoapp.todoapp.dto.model.Todo;
 import semicolon.africa.todoapp.todoapp.dto.repository.TodoRepository;
-import semicolon.africa.todoapp.todoapp.exception.TodoCollecttionException;
+import semicolon.africa.todoapp.todoapp.exception.TodoException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -24,17 +24,17 @@ public class TodoServiceImpl implements TodoService{
                 .todo(createTodoRequest.getTodo())
                 .description(createTodoRequest.getDescription())
                 .isCompleted(createTodoRequest.isCompleted())
-                .createdAt(new Date(System.currentTimeMillis()))
+               .createdAt(new Date(System.currentTimeMillis()))
                 .build();
        return  todoRepository.save(todo);
     }
 
 
     @Override
-    public Todo findTodoById(Long todoId) throws TodoCollecttionException {
+    public Todo findTodoById(Long todoId) throws TodoException {
         Optional<Todo> todoDTOOptional = todoRepository.findById(todoId);
         if (todoDTOOptional.isEmpty()) {
-            throw new TodoCollecttionException(TodoCollecttionException.notFoundExeception(todoId));
+            throw new TodoException(TodoException.notFoundExeception(todoId));
 
         } else {
             return todoDTOOptional.get();
@@ -49,10 +49,10 @@ public class TodoServiceImpl implements TodoService{
     }
 
     @Override
-    public void deleteById(Long todoId) throws TodoCollecttionException {
+    public void deleteById(Long todoId) throws TodoException {
             Optional<Todo> todoDTOOptional = todoRepository.findById(todoId);
             if (todoDTOOptional.isEmpty()) {
-                throw new TodoCollecttionException(TodoCollecttionException.notFoundExeception(todoId));
+                throw new TodoException(TodoException.notFoundExeception(todoId));
 
             } else {
                 todoRepository.deleteById(todoId);
@@ -62,7 +62,7 @@ public class TodoServiceImpl implements TodoService{
     }
 
     @Override
-    public Todo updateTodo(UpdateTodoRequest updateTodoRequest, Long todoId) throws TodoCollecttionException {
+    public Todo updateTodo(UpdateTodoRequest updateTodoRequest, Long todoId) throws TodoException {
         Optional<Todo> foundTodo = todoRepository.findById(todoId);
         if(foundTodo.isPresent()){
             if(updateTodoRequest.getTodo()!= null){
@@ -78,18 +78,18 @@ public class TodoServiceImpl implements TodoService{
 
         }
         else {
-            throw new TodoCollecttionException(TodoCollecttionException.notFoundExeception(todoId));
+            throw new TodoException(TodoException.notFoundExeception(todoId));
         }
 
     }
 
     @Override
-    public Todo findByTodo(String todo) throws TodoCollecttionException {
+    public Todo findByTodo(String todo) throws TodoException {
    Todo foundTodo =     todoRepository.findTodoByTodo(todo);
    if(todo != null){
        return foundTodo;
    }
-        throw new TodoCollecttionException(TodoCollecttionException.TodoNotFoundExeception(null));
+        throw new TodoException(TodoException.TodoNotFoundExeception(null));
     }
 
     @Override

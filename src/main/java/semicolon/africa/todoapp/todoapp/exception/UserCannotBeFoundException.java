@@ -22,11 +22,7 @@ public class UserCannotBeFoundException extends Throwable {
         return "Todo with given name already exists";
     }
 
-//    public static Long UserNotFoundExeception(Long id) {
-//        log.info("User with + ", id , "cannot be found");
-//
-//        return ;
-//    }
+
 }
 
 

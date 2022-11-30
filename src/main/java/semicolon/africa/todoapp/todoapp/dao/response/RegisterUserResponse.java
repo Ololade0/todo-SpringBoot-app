@@ -12,4 +12,5 @@ public class RegisterUserResponse {
     private String message;
     private int code;
     private Long userId;
+    private String phoneNumber;
 }

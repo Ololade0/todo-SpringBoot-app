@@ -5,7 +5,7 @@ import semicolon.africa.todoapp.todoapp.dao.request.*;
 import semicolon.africa.todoapp.todoapp.dao.response.*;
 import semicolon.africa.todoapp.todoapp.dto.model.Todo;
 import semicolon.africa.todoapp.todoapp.dto.model.User;
-import semicolon.africa.todoapp.todoapp.exception.TodoCollecttionException;
+import semicolon.africa.todoapp.todoapp.exception.TodoException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 
 public interface UserService {
@@ -13,20 +13,20 @@ public interface UserService {
 
     long getTotalUsers();
 
-    void deleteAllUsers();
+    String deleteAllUsers();
 
     User findUserById(Long userId) throws UserCannotBeFoundException;
 
     Page<User> findAllUsers(FindAllUserRequest findAllUserRequest);
 
-    void deleteById(Long userId) throws UserCannotBeFoundException;
+    String deleteById(Long userId) throws UserCannotBeFoundException;
 
-    UpdateUserProfileResponse updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest, Long userId) throws UserCannotBeFoundException;
+    UpdateUserProfileResponse updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest) throws UserCannotBeFoundException;
 
     CreateTodoResponse createTodo(CreateTodoRequest createTodoRequest) throws UserCannotBeFoundException;
 
 
-    Todo findTodoById(FindTodoByIdRequest findTodoByIdRequest) throws TodoCollecttionException, UserCannotBeFoundException;
+    Todo findTodoById(FindTodoByIdRequest findTodoByIdRequest) throws TodoException, UserCannotBeFoundException;
 
     Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest) throws UserCannotBeFoundException;
 
@@ -37,7 +37,9 @@ public interface UserService {
     void deleteAll();
 
 
-    DeleteCourseResponse deleteToDoById(DeleteTodoIdRequest deleteTodoIdRequest) throws TodoCollecttionException;
+    DeleteTodoResponse deleteToDoById(DeleteTodoIdRequest deleteTodoIdRequest) throws TodoException, UserCannotBeFoundException;
 
-    UpdateTodoResponse updateTodoss(UpdateTodoRequest updateTodoRequest, Long id) throws TodoCollecttionException;
+    UpdateTodoResponse updateTodo(UpdateTodoRequest updateTodoRequest, Long id) throws TodoException, UserCannotBeFoundException;
+
+    User findByEmail(String username);
 }
