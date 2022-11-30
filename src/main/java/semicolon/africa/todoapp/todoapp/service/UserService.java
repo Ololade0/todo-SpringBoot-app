@@ -2,10 +2,7 @@ package semicolon.africa.todoapp.todoapp.service;
 
 import org.springframework.data.domain.Page;
 import semicolon.africa.todoapp.todoapp.dao.request.*;
-import semicolon.africa.todoapp.todoapp.dao.response.CreateTodoResponse;
-import semicolon.africa.todoapp.todoapp.dao.response.DeleteCourseResponse;
-import semicolon.africa.todoapp.todoapp.dao.response.RegisterUserResponse;
-import semicolon.africa.todoapp.todoapp.dao.response.UpdateUserProfileResponse;
+import semicolon.africa.todoapp.todoapp.dao.response.*;
 import semicolon.africa.todoapp.todoapp.dto.model.Todo;
 import semicolon.africa.todoapp.todoapp.dto.model.User;
 import semicolon.africa.todoapp.todoapp.exception.TodoCollecttionException;
@@ -41,4 +38,6 @@ public interface UserService {
 
 
     DeleteCourseResponse deleteToDoById(DeleteTodoIdRequest deleteTodoIdRequest) throws TodoCollecttionException;
+
+    UpdateTodoResponse updateTodoss(UpdateTodoRequest updateTodoRequest, Long id) throws TodoCollecttionException;
 }

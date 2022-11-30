@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import semicolon.africa.todoapp.todoapp.dao.request.*;
 import semicolon.africa.todoapp.todoapp.dao.response.CreateTodoResponse;
 import semicolon.africa.todoapp.todoapp.dao.response.RegisterUserResponse;
+import semicolon.africa.todoapp.todoapp.dao.response.UpdateTodoResponse;
 import semicolon.africa.todoapp.todoapp.dao.response.UpdateUserProfileResponse;
 import semicolon.africa.todoapp.todoapp.dto.model.Todo;
 import semicolon.africa.todoapp.todoapp.dto.model.User;
@@ -175,23 +176,30 @@ class UserServiceImplTest {
     }
     @Test
     public void UserCanDeletedById() throws TodoCollecttionException, UserCannotBeFoundException {
-
-        CreateTodoRequest createTodoRequest = CreateTodoRequest
-                .builder()
-                .userId(registeredUser.getUserId())
-                .todo("My Todo")
-                .description("My description")
-                .isCompleted(true)
-                .createdAt(new Date(System.currentTimeMillis()))
-                .build();
-        response = userService.createTodo(createTodoRequest);
         DeleteTodoIdRequest deleteTodoIdRequest = DeleteTodoIdRequest
                 .builder()
                 .todoId(response.getId())
                 .userId(registeredUser.getUserId())
                 .build();
         userService.deleteToDoById(deleteTodoIdRequest);
+
         assertEquals(0, userService.getTotaalTodo());
+    }
+
+    @Test
+    public void userCanUpdateTodo() throws TodoCollecttionException {
+        UpdateTodoRequest updateTodoRequest = UpdateTodoRequest
+                .builder()
+                .todo("Ololade's Todo")
+                .userId(registeredUser.getUserId())
+                .description("Ololades Description")
+                .isCompleted(false)
+                .build();
+    UpdateTodoResponse updateUserProfileResponse= userService.updateTodoss(updateTodoRequest,response.getId());
+        assertThat(updateUserProfileResponse.getId()).isNotNull();
+        assertEquals("Todo successfully updated", updateUserProfileResponse.getMessage());
+       assertEquals("Ololade's Todo", updateUserProfileResponse.getTodo());
+        System.out.println(updateUserProfileResponse);
     }
 
 

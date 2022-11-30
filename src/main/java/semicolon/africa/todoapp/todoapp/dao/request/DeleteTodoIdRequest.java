@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class DeleteTodoIdRequest {
     private Long userId;
     private Long todoId;

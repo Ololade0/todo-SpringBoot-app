@@ -1,15 +1,13 @@
 package semicolon.africa.todoapp.todoapp.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import semicolon.africa.todoapp.todoapp.dao.request.*;
-import semicolon.africa.todoapp.todoapp.dao.response.CreateTodoResponse;
-import semicolon.africa.todoapp.todoapp.dao.response.DeleteCourseResponse;
-import semicolon.africa.todoapp.todoapp.dao.response.RegisterUserResponse;
-import semicolon.africa.todoapp.todoapp.dao.response.UpdateUserProfileResponse;
+import semicolon.africa.todoapp.todoapp.dao.response.*;
 import semicolon.africa.todoapp.todoapp.dto.model.Todo;
 import semicolon.africa.todoapp.todoapp.dto.model.User;
 import semicolon.africa.todoapp.todoapp.dto.repository.UserRepository;
@@ -20,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
@@ -176,25 +175,41 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public DeleteCourseResponse deleteToDoById(DeleteTodoIdRequest deleteTodoIdRequest) throws TodoCollecttionException {
-        Optional<User> foundUser = userRepository.findById(deleteTodoIdRequest.getUserId());
-        if(foundUser.isPresent()){
-            List<Todo> todoList = foundUser.get().getTodoList();
-            for (int i = 0; i < todoList.size() ; i++) {
-                if(todoList.get(i).getTodoId().equals(deleteTodoIdRequest.getTodoId())){
-                    todoService.deleteById(deleteTodoIdRequest.getTodoId());
-                    foundUser.get().getTodoList().remove(todoList.get(i));
-                    userRepository.save(foundUser.get());
-                }
-
-            }
-        }
-
+        log.info("request --> {}", deleteTodoIdRequest);
+        todoService.deleteById(deleteTodoIdRequest.getTodoId());
         return DeleteCourseResponse.builder()
                 .message("Course successfully deleted")
                 .build();
 
+
+            }
+
+
+    @Override
+    public UpdateTodoResponse updateTodoss(UpdateTodoRequest updateTodoRequest, Long id) throws TodoCollecttionException {
+      Todo foundTodo =  todoService.updateTodo(updateTodoRequest, id);
+       User foundUser =  userRepository.findUserByUserId(updateTodoRequest.getUserId());
+        if(foundUser!= null){
+            foundUser.getTodoList().add(foundTodo);
+            userRepository.save(foundUser);
+        }
+        return UpdateTodoResponse
+                .builder()
+                .message("Todo successfully updated")
+                .id(foundTodo.getTodoId())
+                .todo(foundTodo.getTodo())
+                .build();
+
     }
-    }
+
+
+
+
+}
+
+
+
+
 
 
 
