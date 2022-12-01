@@ -11,7 +11,7 @@ import java.util.Date;
 @Builder
 public class UpdateTodoRequest {
     private Long userId;
-    private Long todoId;
+//    private Long todoId;
     private String todo;
     private String description;
     private Boolean isCompleted;

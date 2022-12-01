@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import semicolon.africa.todoapp.todoapp.dao.request.*;
 import semicolon.africa.todoapp.todoapp.dao.response.*;
@@ -27,26 +28,26 @@ public class UserServiceImpl implements UserService {
 
     private final TodoService todoService;
 
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public RegisterUserResponse registerUser(RegisterUserRequest registerUserRequest) {
         User user = User.builder()
                 .firstName(registerUserRequest.getFirstName())
                 .lastName(registerUserRequest.getLastName())
-                .phoneNumber(registerUserRequest.getPhoneNumber())
                 .email(registerUserRequest.getEmail())
-                .password(registerUserRequest.getPassword())
-//                .password(passwordEncoder.encode(registerUserRequest.getPassword()))
+//                .password(registerUserRequest.getPassword())
+                .phoneNumber(registerUserRequest.getPhoneNumber())
+               .password(passwordEncoder.encode(registerUserRequest.getPassword()))
                 .role(Role.USER)
                 .build();
+        System.out.println(user.getPassword());
 
-        User registeredUser = userRepository.save(user);
+        User registeredUser= userRepository.save(user);
         return RegisterUserResponse
                 .builder()
                 .message("User successfully registered")
-                               .code(200)
-
+                 .code(200)
                 .userId(registeredUser.getUserId())
                 .build();
     }

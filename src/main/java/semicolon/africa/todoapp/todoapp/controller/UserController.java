@@ -70,10 +70,10 @@ public class UserController {
     }
 
 
-//    @GetMapping("/all-todo")
-//    public ResponseEntity<?> findAllTodo(FindAllUserRequest findAllUserRequest) {
-//        return new ResponseEntity<>(userService.findAllUsers(), HttpStatus.ACCEPTED);
-//    }
+    @GetMapping("/all-todo")
+    public ResponseEntity<?> findAllTodo(@RequestBody FindAllTodoRequest findAllTodoRequest) throws UserCannotBeFoundException {
+        return new ResponseEntity<>(userService.findAllTodo(findAllTodoRequest), HttpStatus.ACCEPTED);
+    }
 
     @DeleteMapping("/delete-todo")
     public ResponseEntity<?> deleteTodoById(@RequestBody DeleteTodoIdRequest deleteTodoIdRequest) throws UserCannotBeFoundException {
@@ -91,7 +91,7 @@ public class UserController {
         }
 
     }
-    @PatchMapping("/profile-todo")
+    @PutMapping("{id}/profile-todo")
     public ResponseEntity<?> updateTodo(@RequestBody UpdateTodoRequest updateTodoRequest, @PathVariable Long id) throws UserCannotBeFoundException {
            UpdateTodoResponse updateTodo = userService.updateTodo(updateTodoRequest, id);
             return new ResponseEntity<>(updateTodo, HttpStatus.ACCEPTED);

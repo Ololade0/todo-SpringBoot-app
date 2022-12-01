@@ -1,8 +1,11 @@
 package semicolon.africa.todoapp.todoapp.dto.model;
 
 import lombok.*;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +16,17 @@ import java.util.List;
 @ToString
 @Builder
 @Entity(name = "user")
+@Validated()
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
+    @NotNull(message = "FirstName cannot be null")
     private String firstName;
+
+    @NotNull(message = "FirstName cannot be null")
     private String lastName;
+    @Email(message = "Email cannot be null")
     private String email;
     private String phoneNumber;
     private String password;

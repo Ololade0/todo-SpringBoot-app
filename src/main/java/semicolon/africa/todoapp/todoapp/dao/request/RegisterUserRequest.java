@@ -8,6 +8,7 @@ import semicolon.africa.todoapp.todoapp.dto.model.Role;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class RegisterUserRequest {
     private Long userId;
     private String firstName;

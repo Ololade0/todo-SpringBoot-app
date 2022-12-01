@@ -8,9 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class RegisterUserResponse {
     private String message;
     private int code;
     private Long userId;
-    private String phoneNumber;
+//    private String phoneNumber;
 }

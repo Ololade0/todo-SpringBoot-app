@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import semicolon.africa.todoapp.todoapp.dao.request.*;
 import semicolon.africa.todoapp.todoapp.dao.response.CreateTodoResponse;
 import semicolon.africa.todoapp.todoapp.dao.response.RegisterUserResponse;
@@ -26,19 +27,25 @@ class UserServiceImplTest {
     CreateTodoResponse response;
     @Autowired
     private UserService userService;
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
 
 
     @BeforeEach
     void setUp() throws UserCannotBeFoundException {
+//        RegisterUserRequest registerUserRequest = n
         RegisterUserRequest registerUserRequest = RegisterUserRequest
+
                 .builder()
                 .firstName("Ololade")
                 .lastName("Oluwatosin")
                 .email("adesuyiololade@gmail.com")
-                .password("1234")
+               .password("1234")
+//                .password(passwordEncoder.encode()
                 .phoneNumber("08109093828")
                 .build();
          registeredUser =  userService.registerUser(registerUserRequest);
+        System.out.println(registeredUser);
 
         CreateTodoRequest createTodoRequest = CreateTodoRequest
                 .builder()
@@ -82,6 +89,8 @@ class UserServiceImplTest {
         assertEquals(2L, userService.getTotalUsers());
         assertThat(registeredUser.getUserId()).isNotNull();
         assertEquals(200, registeredUser.getCode());
+        System.out.println(registerUserRequest);
+
 
     }
     @Test
