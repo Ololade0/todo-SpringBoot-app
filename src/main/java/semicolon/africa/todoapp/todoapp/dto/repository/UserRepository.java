@@ -7,5 +7,6 @@ import semicolon.africa.todoapp.todoapp.dto.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findUserByUserId(Long userId);
+    User  findUserByFirstName(String firstname);
     User findByEmail(String email);
 }

@@ -42,4 +42,5 @@ public interface UserService {
     UpdateTodoResponse updateTodo(UpdateTodoRequest updateTodoRequest, Long id) throws TodoException, UserCannotBeFoundException;
 
     User findByEmail(String username);
+
 }

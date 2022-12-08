@@ -10,12 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
 import java.util.Date;
-//
+
 @AllArgsConstructor
 public class JwtUtils {
     private String issuer;
     private Algorithm algorithm;
-
 
     public String generateAccessToken(UserDetails user){
         return JWT.create()

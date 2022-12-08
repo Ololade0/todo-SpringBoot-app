@@ -36,12 +36,10 @@ public class UserServiceImpl implements UserService {
                 .firstName(registerUserRequest.getFirstName())
                 .lastName(registerUserRequest.getLastName())
                 .email(registerUserRequest.getEmail())
-//                .password(registerUserRequest.getPassword())
                 .phoneNumber(registerUserRequest.getPhoneNumber())
                .password(passwordEncoder.encode(registerUserRequest.getPassword()))
                 .role(Role.USER)
                 .build();
-        System.out.println(user.getPassword());
 
         User registeredUser= userRepository.save(user);
         return RegisterUserResponse
@@ -126,7 +124,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CreateTodoResponse createTodo(CreateTodoRequest createTodoRequest) throws UserCannotBeFoundException {
+    public CreateTodoResponse createTodo(CreateTodoRequest createTodoRequest)  {
         Todo foundTodo = todoService.createTodo(createTodoRequest);
         Optional<User> foundUser = userRepository.findById(createTodoRequest.getUserId());
         if(foundUser.isPresent()){
@@ -226,6 +224,7 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String username) {
         return userRepository.findByEmail(username);
     }
+
 
 
 }

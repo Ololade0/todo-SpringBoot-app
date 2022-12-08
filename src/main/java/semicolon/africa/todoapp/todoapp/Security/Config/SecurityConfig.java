@@ -1,6 +1,4 @@
 package semicolon.africa.todoapp.todoapp.Security.Config;
-
-
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
