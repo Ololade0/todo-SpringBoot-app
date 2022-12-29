@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">ADESUYI FAMILY MEETING </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        body {
+            font-family: calibri, 'DejaVu Sans', Arial, Helvetica, sans-serif;
+        }
+        a.link {
+            border: solid 1px #000;
+            background-color: #000;
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            display: block;
+            width: 360px;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<h1>Confirm your availability via the Group chat
+    br
+    </h1>
+<div>I hope this mail find you well <b th:text="${name}">name</b> !</div>
+<p>
+    This is to inform the entire family that there will be a family meeting which will be holding 8pm promp tomorrow(No African Time)
+    THis meeting is hereby very important and cumpulsory as various dialogue will be discuss
+    signed: Management
+    <br/><br/>
+    Email address : <b th:text="${email}">email</b><br/>
+    <br/>
+
+</p>
+<p style="text-align: left;">
+    <a class="link" href="#" th:href="${url}">Confirm my availability on the Family whatsapp group chat</a>
+</p>
+<br>
+<p>
+    <img src="images/spring.png" data-th-src="|cid:springLogo|" height="80" />
+</p>
+<p>
+    Regards, <br />
+    &emsp; <em>The Adesuyi Management  Team</em>
+</p>
+</body>
+</html>
