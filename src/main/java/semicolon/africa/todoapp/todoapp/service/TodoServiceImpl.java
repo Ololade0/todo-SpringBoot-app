@@ -86,7 +86,7 @@ public class TodoServiceImpl implements TodoService{
 
     @Override
     public Todo findByTodo(String todo) throws TodoException {
-   Todo foundTodo =     todoRepository.findTodoByTodo(todo);
+   Todo foundTodo =     todoRepository.findFirstByTodo(todo);
    if(todo != null){
        return foundTodo;
    }

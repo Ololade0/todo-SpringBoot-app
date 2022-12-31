@@ -42,7 +42,6 @@ class UserServiceImplTest {
                 .lastName("Oluwatosin")
                 .email("adesuyiololade@gmail.com")
                .password("1234")
-//                .password(passwordEncoder.encode()
                 .phoneNumber("08109093828")
                 .build();
          registeredUser =  userService.registerUser(registerUserRequest);

@@ -1,14 +1,12 @@
 package semicolon.africa.todoapp.todoapp.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
+
 import semicolon.africa.todoapp.todoapp.dao.request.*;
 import semicolon.africa.todoapp.todoapp.dao.response.*;
 import semicolon.africa.todoapp.todoapp.dto.model.Todo;

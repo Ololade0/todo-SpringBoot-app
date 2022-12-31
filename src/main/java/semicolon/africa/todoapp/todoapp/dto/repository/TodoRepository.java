@@ -6,6 +6,6 @@ import semicolon.africa.todoapp.todoapp.dto.model.Todo;
 
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
-    Todo findTodoByTodo(String todo);
+    Todo findFirstByTodo(String todo);
 
 }
