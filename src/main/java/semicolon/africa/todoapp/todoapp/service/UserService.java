@@ -8,6 +8,8 @@ import semicolon.africa.todoapp.todoapp.dto.model.User;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 
+import java.util.List;
+
 public interface UserService {
     RegisterUserResponse registerUser(RegisterUserRequest registerUserRequest);
 
@@ -28,7 +30,7 @@ public interface UserService {
 
     Todo findTodoById(FindTodoByIdRequest findTodoByIdRequest) throws TodoException, UserCannotBeFoundException;
 
-    Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest) throws UserCannotBeFoundException;
+//    Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest) throws UserCannotBeFoundException;
 
     String deleteAllTodo(DeleteTodoRequest deleteTodoRequest);
 
@@ -43,4 +45,5 @@ public interface UserService {
 
     User findByEmail(String username);
 
+    List<Todo> findAllTodos();
 }

@@ -17,7 +17,8 @@ import java.util.List;
 @Builder
 @Entity(name = "user")
 @Validated()
-public class User {
+public class
+User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;

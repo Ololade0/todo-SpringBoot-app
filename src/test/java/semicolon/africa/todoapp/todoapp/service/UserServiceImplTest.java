@@ -18,6 +18,7 @@ import semicolon.africa.todoapp.todoapp.exception.TodoException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -166,15 +167,17 @@ class UserServiceImplTest {
 
     @Test
     public void UserCanFindAllTodo() throws UserCannotBeFoundException {
-        FindAllTodoRequest findAllTodoRequest = FindAllTodoRequest
-                .builder()
-                .userId(registeredUser.getUserId())
-                .numberOfPerPages(1)
-                .pageNumber(1)
-                .build();
-       Page<Todo> page = userService.findAllTodo(findAllTodoRequest);
-        assertThat(page.getTotalElements()).isNotNull();
-       assertEquals(1L, userService.findAllTodo(findAllTodoRequest).getTotalElements());
+       List<Todo> foundTodo =  userService.findAllTodos();
+        assertEquals("My Todo",foundTodo.get(0).getTodo());
+//        FindAllTodoRequest findAllTodoRequest = FindAllTodoRequest
+//                .builder()
+//                .userId(registeredUser.getUserId())
+//                .numberOfPerPages(1)
+//                .pageNumber(1)
+//                .build();
+//       Page<Todo> page = userService.findAllTodo(findAllTodoRequest);
+//        assertThat(page.getTotalElements()).isNotNull();
+//       assertEquals(1L, userService.findAllTodo(findAllTodoRequest).getTotalElements());
     }
 
     @Test

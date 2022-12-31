@@ -7,6 +7,8 @@ import semicolon.africa.todoapp.todoapp.dao.request.UpdateTodoRequest;
 import semicolon.africa.todoapp.todoapp.dto.model.Todo;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
 
+import java.util.List;
+
 public interface TodoService {
     Todo createTodo(CreateTodoRequest createTodoRequest);
     long sizeOfTodo();
@@ -16,7 +18,7 @@ public interface TodoService {
 
     Todo findTodoById(Long todoId) throws TodoException;
 
-    Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest);
+//    Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest);
 
 
     void deleteById(Long todoId) throws TodoException;
@@ -24,4 +26,6 @@ public interface TodoService {
     Todo updateTodo(UpdateTodoRequest updateTodoRequest, Long todoId) throws TodoException;
 
     Todo findByTodo(String todo) throws TodoException;
+
+    List<Todo> findAllTodos();
 }

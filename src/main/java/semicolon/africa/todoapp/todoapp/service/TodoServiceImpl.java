@@ -12,6 +12,7 @@ import semicolon.africa.todoapp.todoapp.dto.model.Todo;
 import semicolon.africa.todoapp.todoapp.dto.repository.TodoRepository;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,12 +42,12 @@ public class TodoServiceImpl implements TodoService{
         }
     }
 
-    @Override
-    public Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest) {
-        Pageable pageable = PageRequest.of(findAllTodoRequest.getPageNumber()-1, findAllTodoRequest.getNumberOfPerPages());
-        Page<Todo> todoDTOS = todoRepository.findAll(pageable);
-        return todoDTOS;
-    }
+//    @Override
+//    public Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest) {
+//        Pageable pageable = PageRequest.of(findAllTodoRequest.getPageNumber()-1, findAllTodoRequest.getNumberOfPerPages());
+//        Page<Todo> todoDTOS = todoRepository.findAll(pageable);
+//        return todoDTOS;
+//    }
 
     @Override
     public void deleteById(Long todoId) throws TodoException {
@@ -90,6 +91,11 @@ public class TodoServiceImpl implements TodoService{
        return foundTodo;
    }
         throw new TodoException(TodoException.TodoNotFoundExeception(null));
+    }
+
+    @Override
+    public List<Todo> findAllTodos() {
+       return todoRepository.findAll();
     }
 
     @Override

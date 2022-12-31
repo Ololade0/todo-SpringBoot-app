@@ -13,6 +13,7 @@ import semicolon.africa.todoapp.todoapp.dto.model.Todo;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,14 +74,16 @@ class TodoServiceImplTest {
 
     @Test
     public void findAllTodo() {
-        FindAllTodoRequest findAllTodoRequest = FindAllTodoRequest
-                .builder()
-             .numberOfPerPages(8)
-                .pageNumber(1)
-                .build();
-      Page<Todo> todoPage=  todoService.findAllTodo(findAllTodoRequest);
-        assertThat(todoPage).isNotNull();
-       assertThat(todoPage.getTotalElements()).isGreaterThan(0);
+      List<Todo> foundTodo =  todoService.findAllTodos();
+        assertEquals("My description", foundTodo.get(0).getDescription());
+//        FindAllTodoRequest findAllTodoRequest = FindAllTodoRequest
+//                .builder()
+//             .numberOfPerPages(8)
+//                .pageNumber(1)
+//                .build();
+//      Page<Todo> todoPage=  todoService.findAllTodo(findAllTodoRequest);
+//        assertThat(todoPage).isNotNull();
+//       assertThat(todoPage.getTotalElements()).isGreaterThan(0);
     }
 
     @Test
@@ -109,7 +112,7 @@ class TodoServiceImplTest {
                 .numberOfPerPages(8)
                 .pageNumber(1)
                 .build();
-        Page<Todo> todoPage=  todoService.findAllTodo(findAllTodoRequest);
+//        Page<Todo> todoPage=  todoService.findAllTodo(findAllTodoRequest);
         UpdateTodoRequest updateTodoRequest = UpdateTodoRequest
                 .builder()
                 .description("Ololades Description")

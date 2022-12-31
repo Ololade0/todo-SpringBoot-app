@@ -17,6 +17,7 @@ import semicolon.africa.todoapp.todoapp.dto.repository.UserRepository;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -151,16 +152,16 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest) throws UserCannotBeFoundException {
-        Optional<User> foundUser = userRepository.findById(findAllTodoRequest.getUserId());
-        if(foundUser.isPresent()){
-            return todoService.findAllTodo(findAllTodoRequest);
-        }
-        else {
-            throw new UserCannotBeFoundException(UserCannotBeFoundException.notFoundExeception(findAllTodoRequest.getUserId()));
-        }
-    }
+//    @Override
+//    public Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest) throws UserCannotBeFoundException {
+//        Optional<User> foundUser = userRepository.findById(findAllTodoRequest.getUserId());
+//        if(foundUser.isPresent()){
+//            return todoService.findAllTodo(findAllTodoRequest);
+//        }
+//        else {
+//            throw new UserCannotBeFoundException(UserCannotBeFoundException.notFoundExeception(findAllTodoRequest.getUserId()));
+//        }
+//    }
 
     @Override
     public String deleteAllTodo(DeleteTodoRequest deleteTodoRequest) {
@@ -225,6 +226,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(username);
     }
 
+    @Override
+    public List<Todo> findAllTodos() {
+        return todoService.findAllTodos();
+    }
 
 
 }
