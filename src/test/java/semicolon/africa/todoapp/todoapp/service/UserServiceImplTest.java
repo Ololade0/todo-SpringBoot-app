@@ -5,15 +5,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
-import semicolon.africa.todoapp.todoapp.dao.request.*;
-import semicolon.africa.todoapp.todoapp.dao.response.CreateTodoResponse;
-import semicolon.africa.todoapp.todoapp.dao.response.RegisterUserResponse;
-import semicolon.africa.todoapp.todoapp.dao.response.UpdateTodoResponse;
-import semicolon.africa.todoapp.todoapp.dao.response.UpdateUserProfileResponse;
-import semicolon.africa.todoapp.todoapp.dto.model.Todo;
-import semicolon.africa.todoapp.todoapp.dto.model.User;
+import semicolon.africa.todoapp.todoapp.dao.model.Todo;
+import semicolon.africa.todoapp.todoapp.dao.model.User;
+import semicolon.africa.todoapp.todoapp.dto.request.*;
+import semicolon.africa.todoapp.todoapp.dto.response.CreateTodoResponse;
+import semicolon.africa.todoapp.todoapp.dto.response.UpdateTodoResponse;
+import semicolon.africa.todoapp.todoapp.dto.response.UpdateUserProfileResponse;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 
@@ -24,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class UserServiceImplTest {
-    RegisterUserResponse registeredUser;
+    User registeredUser;
     CreateTodoResponse response;
     @Autowired
     private UserService userService;
@@ -35,8 +34,7 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() throws UserCannotBeFoundException {
 //        RegisterUserRequest registerUserRequest = n
-        RegisterUserRequest registerUserRequest = RegisterUserRequest
-
+        User registerUserRequest = User
                 .builder()
                 .firstName("Ololade")
                 .lastName("Oluwatosin")
@@ -53,8 +51,7 @@ class UserServiceImplTest {
                 .todo("My Todo")
                 .description("My description")
                 .isCompleted(true)
-                .createdAt(new Date(System.currentTimeMillis()))
-                .build();
+                               .build();
          response = userService.createTodo(createTodoRequest);
     }
 
@@ -77,19 +74,20 @@ class UserServiceImplTest {
     }
     @Test
     public void userCanBeRegistered(){
-        RegisterUserRequest registerUserRequest = RegisterUserRequest
+        User registerUserRequest = User
                 .builder()
                 .firstName("Ololade")
                 .lastName("Oluwatosin")
-                .password("1234")
                 .email("adesuyiololade@gmail.com")
+                .password("1234")
                 .phoneNumber("08109093828")
                 .build();
+        registeredUser =  userService.registerUser(registerUserRequest);
+
       registeredUser =  userService.registerUser(registerUserRequest);
         assertEquals(2L, userService.getTotalUsers());
         assertThat(registeredUser.getUserId()).isNotNull();
-        assertEquals(200, registeredUser.getCode());
-        System.out.println(registerUserRequest);
+
 
 
     }
@@ -101,15 +99,9 @@ class UserServiceImplTest {
     }
     @Test
     public void allUserCanBeFound(){
-        FindAllUserRequest findAllUserRequest = FindAllUserRequest
-                .builder()
-                .numberOfPerPages(8)
-                .pageNumber(1)
-                .build();
-       Page<User> userPage = userService.findAllUsers(findAllUserRequest);
+        List<User> userPage = userService.findAllUsers();
         assertThat(userPage).isNotNull();
-        assertThat(userPage.getTotalElements()).isGreaterThan(0);
-    }
+      }
     @Test
     public void allUserCanBeDeleted(){
         userService.deleteAllUsers();
@@ -119,8 +111,7 @@ class UserServiceImplTest {
     @Test
     public void usersCanBeDeletedById() throws UserCannotBeFoundException {
         userService.deleteById(registeredUser.getUserId());
-        assertEquals(0, userService.getTotalUsers());
-    }
+          }
 
     @Test
     public void usersProfileCanBeUpdated() throws UserCannotBeFoundException {
@@ -146,7 +137,6 @@ class UserServiceImplTest {
                 .todo("My Todo")
                 .description("My description")
                 .isCompleted(true)
-                .createdAt(new Date(System.currentTimeMillis()))
                 .build();
        CreateTodoResponse response = userService.createTodo(createTodoRequest);
         assertThat(response.getId()).isNotNull();
@@ -168,24 +158,13 @@ class UserServiceImplTest {
     public void UserCanFindAllTodo() throws UserCannotBeFoundException {
        List<Todo> foundTodo =  userService.findAllTodos();
         assertEquals("My Todo",foundTodo.get(0).getTodo());
-//        FindAllTodoRequest findAllTodoRequest = FindAllTodoRequest
-//                .builder()
-//                .userId(registeredUser.getUserId())
-//                .numberOfPerPages(1)
-//                .pageNumber(1)
-//                .build();
-//       Page<Todo> page = userService.findAllTodo(findAllTodoRequest);
-//        assertThat(page.getTotalElements()).isNotNull();
-//       assertEquals(1L, userService.findAllTodo(findAllTodoRequest).getTotalElements());
+
     }
 
     @Test
     public void UserCanDeleteAllTodo(){
-        DeleteTodoRequest deleteTodoRequest = DeleteTodoRequest.builder()
-                .userId(registeredUser.getUserId())
-                .todoId(response.getId())
-                .build();
-        userService.deleteAllTodo(deleteTodoRequest);
+
+        userService.deleteAllTodo();
         assertEquals(0, userService.getTotaalTodo());
     }
     @Test

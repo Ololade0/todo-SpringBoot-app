@@ -11,7 +11,6 @@ public class CreateTodoRequest {
     private Long userId;
     private String todo;
     private String description;
-//    private Date createdAt;
-    private boolean isCompleted;
+     private boolean isCompleted;
 
 }

@@ -6,6 +6,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import semicolon.africa.todoapp.todoapp.dao.model.RoleType;
+import semicolon.africa.todoapp.todoapp.dao.model.User;
 import semicolon.africa.todoapp.todoapp.dao.repository.UserRepository;
 
 @Component
@@ -22,8 +24,8 @@ public class SetUpDataLoader implements ApplicationListener<ContextRefreshedEven
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (userRepository.findUserByEmail("adesuuser@gmail.com").isEmpty()){
-//            User user = new User("Adesuyi", "Ololade","adesuuser@gmail.com", passwordEncoder.encode("password1234#"), "1234", RoleType.ADMIN);
-//            userRepository.save(user);
+            User user = new User("Adesuyi", "Ololade","adesuuser@gmail.com", passwordEncoder.encode("password1234#"), "1234", RoleType.ADMIN);
+            userRepository.save(user);
         }
     }
 

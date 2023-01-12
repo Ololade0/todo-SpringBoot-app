@@ -5,11 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import semicolon.africa.todoapp.todoapp.dao.request.CreateTodoRequest;
-import semicolon.africa.todoapp.todoapp.dao.request.FindAllTodoRequest;
-import semicolon.africa.todoapp.todoapp.dao.request.UpdateTodoRequest;
-import semicolon.africa.todoapp.todoapp.dto.model.Todo;
+import semicolon.africa.todoapp.todoapp.dao.model.Todo;
+import semicolon.africa.todoapp.todoapp.dto.request.CreateTodoRequest;
+
+import semicolon.africa.todoapp.todoapp.dto.request.UpdateTodoRequest;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
 
 import java.util.Date;
@@ -32,8 +31,7 @@ class TodoServiceImplTest {
                 .description("My description")
                 .todo("My todo")
                 .isCompleted(true)
-                .createdAt(new Date(System.currentTimeMillis()))
-                .build();
+                 .build();
          savedTodo =  todoService.createTodo(createTodoRequest);
 
     }
@@ -58,8 +56,7 @@ class TodoServiceImplTest {
                 .description("My description")
                 .todo("My todo")
                 .isCompleted(true)
-                .createdAt(new Date(System.currentTimeMillis()))
-                .build();
+                    .build();
         savedTodo =  todoService.createTodo(createTodoRequest);
         assertEquals(2L, todoService.sizeOfTodo());
         assertEquals("My todo", savedTodo.getTodo());
@@ -76,14 +73,7 @@ class TodoServiceImplTest {
     public void findAllTodo() {
       List<Todo> foundTodo =  todoService.findAllTodos();
         assertEquals("My description", foundTodo.get(0).getDescription());
-//        FindAllTodoRequest findAllTodoRequest = FindAllTodoRequest
-//                .builder()
-//             .numberOfPerPages(8)
-//                .pageNumber(1)
-//                .build();
-//      Page<Todo> todoPage=  todoService.findAllTodo(findAllTodoRequest);
-//        assertThat(todoPage).isNotNull();
-//       assertThat(todoPage.getTotalElements()).isGreaterThan(0);
+
     }
 
     @Test
@@ -107,12 +97,7 @@ class TodoServiceImplTest {
 
     @Test
     public void updateTodo() throws TodoException {
-        FindAllTodoRequest findAllTodoRequest = FindAllTodoRequest
-                .builder()
-                .numberOfPerPages(8)
-                .pageNumber(1)
-                .build();
-//        Page<Todo> todoPage=  todoService.findAllTodo(findAllTodoRequest);
+
         UpdateTodoRequest updateTodoRequest = UpdateTodoRequest
                 .builder()
                 .description("Ololades Description")
