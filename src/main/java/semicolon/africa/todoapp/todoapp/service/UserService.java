@@ -1,17 +1,16 @@
 package semicolon.africa.todoapp.todoapp.service;
 
-import org.springframework.data.domain.Page;
-import semicolon.africa.todoapp.todoapp.dao.request.*;
-import semicolon.africa.todoapp.todoapp.dao.response.*;
-import semicolon.africa.todoapp.todoapp.dto.model.Todo;
-import semicolon.africa.todoapp.todoapp.dto.model.User;
+import semicolon.africa.todoapp.todoapp.dao.model.Todo;
+import semicolon.africa.todoapp.todoapp.dao.model.User;
+import semicolon.africa.todoapp.todoapp.dto.request.*;
+import semicolon.africa.todoapp.todoapp.dto.response.*;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 
 import java.util.List;
 
 public interface UserService {
-    RegisterUserResponse registerUser(RegisterUserRequest registerUserRequest);
+   User registerUser(User registerUser);
 
     long getTotalUsers();
 
@@ -19,7 +18,7 @@ public interface UserService {
 
     User findUserById(Long userId) throws UserCannotBeFoundException;
 
-    Page<User> findAllUsers(FindAllUserRequest findAllUserRequest);
+    List<User> findAllUsers();
 
     String deleteById(Long userId) throws UserCannotBeFoundException;
 
@@ -30,9 +29,9 @@ public interface UserService {
 
     Todo findTodoById(FindTodoByIdRequest findTodoByIdRequest) throws TodoException, UserCannotBeFoundException;
 
-//    Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest) throws UserCannotBeFoundException;
 
-    String deleteAllTodo(DeleteTodoRequest deleteTodoRequest);
+
+    String deleteAllTodo();
 
      long getTotaalTodo();
 
@@ -46,4 +45,8 @@ public interface UserService {
     User findByEmail(String username);
 
     List<Todo> findAllTodos();
+
+    UserLoginResponse login(UserLoginRequestModel userLoginRequestModel);
+
+ String deleteTodoByIds(Long id);
 }

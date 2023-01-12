@@ -1,16 +1,13 @@
 package semicolon.africa.todoapp.todoapp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import semicolon.africa.todoapp.todoapp.dao.request.CreateTodoRequest;
-import semicolon.africa.todoapp.todoapp.dao.request.FindAllTodoRequest;
-import semicolon.africa.todoapp.todoapp.dao.request.UpdateTodoRequest;
-import semicolon.africa.todoapp.todoapp.dto.model.Todo;
-import semicolon.africa.todoapp.todoapp.dto.repository.TodoRepository;
+import semicolon.africa.todoapp.todoapp.dao.model.Todo;
+import semicolon.africa.todoapp.todoapp.dao.repository.TodoRepository;
+import semicolon.africa.todoapp.todoapp.dto.request.CreateTodoRequest;
+import semicolon.africa.todoapp.todoapp.dto.request.UpdateTodoRequest;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +22,10 @@ public class TodoServiceImpl implements TodoService{
                 .todo(createTodoRequest.getTodo())
                 .description(createTodoRequest.getDescription())
                 .isCompleted(createTodoRequest.isCompleted())
-               .createdAt(new Date(System.currentTimeMillis()))
                 .build();
-       return  todoRepository.save(todo);
+//         .createdAt(new Date(System.currentTimeMillis()))
+        new Date(System.currentTimeMillis());
+               return  todoRepository.save(todo);
     }
 
 
@@ -42,12 +40,6 @@ public class TodoServiceImpl implements TodoService{
         }
     }
 
-//    @Override
-//    public Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest) {
-//        Pageable pageable = PageRequest.of(findAllTodoRequest.getPageNumber()-1, findAllTodoRequest.getNumberOfPerPages());
-//        Page<Todo> todoDTOS = todoRepository.findAll(pageable);
-//        return todoDTOS;
-//    }
 
     @Override
     public void deleteById(Long todoId) throws TodoException {

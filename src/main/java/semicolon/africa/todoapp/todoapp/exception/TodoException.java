@@ -15,9 +15,6 @@ public class TodoException extends RuntimeException {
         return "Todo with " + todo +" not found";
     }
 
-    public static  String TodoAlreadyExist(){
-        return "Todo with given name already exists";
-    }
 }
 
 

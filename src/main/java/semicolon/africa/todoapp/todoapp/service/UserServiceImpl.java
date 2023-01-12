@@ -2,28 +2,31 @@ package semicolon.africa.todoapp.todoapp.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import semicolon.africa.todoapp.todoapp.dao.request.*;
-import semicolon.africa.todoapp.todoapp.dao.response.*;
-import semicolon.africa.todoapp.todoapp.dto.model.Role;
-import semicolon.africa.todoapp.todoapp.dto.model.Todo;
-import semicolon.africa.todoapp.todoapp.dto.model.User;
-import semicolon.africa.todoapp.todoapp.dto.repository.UserRepository;
+import semicolon.africa.todoapp.todoapp.dao.model.Role;
+import semicolon.africa.todoapp.todoapp.dao.model.RoleType;
+import semicolon.africa.todoapp.todoapp.dao.model.Todo;
+import semicolon.africa.todoapp.todoapp.dao.model.User;
+import semicolon.africa.todoapp.todoapp.dao.repository.UserRepository;
+import semicolon.africa.todoapp.todoapp.dto.request.*;
+import semicolon.africa.todoapp.todoapp.dto.response.*;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
+import semicolon.africa.todoapp.todoapp.exception.UserAlreadyExistException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @AllArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -32,23 +35,24 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public RegisterUserResponse registerUser(RegisterUserRequest registerUserRequest) {
+    public User registerUser(User registerUser) {
+      User foundEmail =  userRepository.findByEmail(registerUser.getEmail());
+      if(foundEmail !=null){
+          throw new UserAlreadyExistException(UserAlreadyExistException.userAlreadyExistExecption(registerUser.getEmail()));
+      }
         User user = User.builder()
-                .firstName(registerUserRequest.getFirstName())
-                .lastName(registerUserRequest.getLastName())
-                .email(registerUserRequest.getEmail())
-                .phoneNumber(registerUserRequest.getPhoneNumber())
-               .password(passwordEncoder.encode(registerUserRequest.getPassword()))
-                .role(Role.USER)
+                .firstName(registerUser.getFirstName())
+                .lastName(registerUser.getLastName())
+                .email(registerUser.getEmail())
+                .phoneNumber(registerUser.getPhoneNumber())
+               .password(passwordEncoder.encode(registerUser.getPassword()))
+                .roles(new HashSet<>())
                 .build();
+        user.getRoles().add(new Role(RoleType.USER));
+        return userRepository.save(user);
 
-        User registeredUser= userRepository.save(user);
-        return RegisterUserResponse
-                .builder()
-                .message("User successfully registered")
-                 .code(200)
-                .userId(registeredUser.getUserId())
-                .build();
+
+
     }
 
     @Override
@@ -72,9 +76,8 @@ public class UserServiceImpl implements UserService {
         return foundUser.get();
     }
     @Override
-    public Page<User> findAllUsers(FindAllUserRequest findAllUserRequest) {
-        Pageable pageable = PageRequest.of(findAllUserRequest.getPageNumber()-1, findAllUserRequest.getNumberOfPerPages());
-        return userRepository.findAll(pageable);
+    public List<User> findAllUsers() {
+                return userRepository.findAll();
     }
 
     @Override
@@ -142,8 +145,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Todo findTodoById(FindTodoByIdRequest findTodoByIdRequest) throws TodoException, UserCannotBeFoundException {
-        Optional<User> foundUser = userRepository.findById(findTodoByIdRequest.getUserId());
-        if(foundUser.isPresent()){
+        User foundUser = userRepository.findUserByUserId(findTodoByIdRequest.getUserId());
+        if(foundUser != null){
            return todoService.findTodoById(findTodoByIdRequest.getTodoId());
         }
         else {
@@ -152,21 +155,36 @@ public class UserServiceImpl implements UserService {
 
     }
 
-//    @Override
-//    public Page<Todo> findAllTodo(FindAllTodoRequest findAllTodoRequest) throws UserCannotBeFoundException {
-//        Optional<User> foundUser = userRepository.findById(findAllTodoRequest.getUserId());
-//        if(foundUser.isPresent()){
-//            return todoService.findAllTodo(findAllTodoRequest);
-//        }
-//        else {
-//            throw new UserCannotBeFoundException(UserCannotBeFoundException.notFoundExeception(findAllTodoRequest.getUserId()));
-//        }
-//    }
+    @Override
+    public List<Todo> findAllTodos() {
+        return todoService.findAllTodos();
+    }
 
     @Override
-    public String deleteAllTodo(DeleteTodoRequest deleteTodoRequest) {
-        Optional<User> foundUser = userRepository.findById(deleteTodoRequest.getUserId());
-        if(foundUser.isPresent())
+    public UserLoginResponse login(UserLoginRequestModel userLoginRequestModel) {
+        var user = userRepository.findByEmail(userLoginRequestModel.getEmail());
+//        var user = userRepository.findByEmail(userLoginRequestModel.getEmail());
+        if(user != null && user.getPassword().equals(userLoginRequestModel.getPassword()));
+        return buildSuccessfulLoginResponse(user);
+    }
+
+    @Override
+    public String deleteTodoByIds(Long id) {
+        todoService.deleteById(id);
+        return "All todo successfully deleted";
+    }
+
+    private UserLoginResponse buildSuccessfulLoginResponse(User user) {
+        return UserLoginResponse.builder()
+//                .code(200)
+                .message("Login successful")
+                .build();
+
+    }
+
+
+    @Override
+    public String deleteAllTodo() {
             todoService.deleteAll();
          return "Todo successfully deleted";
 
@@ -223,13 +241,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByEmail(String username) {
+
         return userRepository.findByEmail(username);
     }
 
     @Override
-    public List<Todo> findAllTodos() {
-        return todoService.findAllTodos();
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findUserByEmail(username).orElse(null);
+        if (user != null){
+            return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities(user.getRoles()));
+        }
+        throw new UsernameNotFoundException("User with email "+ username +" does not exist");
     }
+
+    private Collection<? extends GrantedAuthority> getAuthorities(Set<Role> roles) {
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getRoleType().name())).collect(Collectors.toSet());
+    }
+
 
 
 }
