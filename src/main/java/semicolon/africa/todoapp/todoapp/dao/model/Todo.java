@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 @Builder
-@Entity(name = "todos")
+@Entity(name = "Todo")
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +20,7 @@ public class Todo {
     private String description;
     private Date createdAt;
     private Boolean isCompleted;
+
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;

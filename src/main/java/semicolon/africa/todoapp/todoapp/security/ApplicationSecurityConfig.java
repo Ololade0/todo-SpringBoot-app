@@ -2,6 +2,7 @@ package semicolon.africa.todoapp.todoapp.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -32,7 +33,8 @@ public class ApplicationSecurityConfig  {
         http.cors().and().csrf().disable()
                 .authorizeHttpRequests(authorize -> {
                     try {
-                        authorize.antMatchers("/**/auth/**").permitAll()
+                        authorize
+                                .antMatchers("/**/auth/**").permitAll()
                                 .antMatchers("/customError").permitAll()
                                 .antMatchers("/access-denied").permitAll()
                                 .anyRequest().authenticated()

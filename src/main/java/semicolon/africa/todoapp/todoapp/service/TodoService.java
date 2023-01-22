@@ -1,6 +1,7 @@
 package semicolon.africa.todoapp.todoapp.service;
 
 import semicolon.africa.todoapp.todoapp.dao.model.Todo;
+import semicolon.africa.todoapp.todoapp.dao.model.User;
 import semicolon.africa.todoapp.todoapp.dto.request.CreateTodoRequest;
 import semicolon.africa.todoapp.todoapp.dto.request.UpdateTodoRequest;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
@@ -23,4 +24,7 @@ public interface TodoService {
     Todo findByTodo(String todo) throws TodoException;
 
     List<Todo> findAllTodos();
+
+
+
 }

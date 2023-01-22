@@ -24,6 +24,8 @@ import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 import semicolon.africa.todoapp.todoapp.security.jwt.TokenProvider;
 import semicolon.africa.todoapp.todoapp.service.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -32,13 +34,12 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@NonNull @RequestBody User registerUser) throws UnirestException {
+    public ResponseEntity<?> registerUser(@RequestBody User registerUser) throws UnirestException {
         User registeredUser = userService.registerUser(registerUser);
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
-    @PreAuthorize("hasRole('ROLE_USER')")
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequestModel loginRequest) throws UserCannotBeFoundException {
         Authentication authentication = authenticationManager.authenticate(
@@ -51,24 +52,23 @@ public class AuthController {
         return new ResponseEntity<>(new AuthToken(token, user.getUserId()), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("{id}")
     public ResponseEntity<?> findUserById(@PathVariable Long id) throws UserCannotBeFoundException {
         User foundUser = userService.findUserById(id);
         return new ResponseEntity<>(foundUser, HttpStatus.ACCEPTED);
     }
-    @PreAuthorize("hasRole('ROLE_USER')")
+
     @GetMapping("/all-user")
     public ResponseEntity<?> findAllUsers() {
         return new ResponseEntity<>(userService.findAllUsers(), HttpStatus.ACCEPTED);
     }
-    @PreAuthorize("hasRole('ROLE_USER')")
+
     @DeleteMapping("{id}/delete")
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) throws UserCannotBeFoundException {
         String deletedUsers = userService.deleteById(id);
         return new ResponseEntity<>(deletedUsers, HttpStatus.ACCEPTED);
     }
-    @PreAuthorize("hasRole('ROLE_USER')")
+
     @DeleteMapping("deleteuser")
     public ResponseEntity<?> deleteAllUser()  {
         String deletedUsers = userService.deleteAllUsers();
@@ -77,44 +77,44 @@ public class AuthController {
 
 
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+
     @PutMapping("/profile")
     public ResponseEntity<?> updateProfile(@RequestBody UpdateUserProfileRequest updateUserProfileRequest) throws UserCannotBeFoundException {
         UpdateUserProfileResponse updateUserProfile = userService.updateUserProfile(updateUserProfileRequest);
         return new ResponseEntity<>(updateUserProfile, HttpStatus.ACCEPTED);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/todo")
     public ResponseEntity<?> createTodo(@RequestBody CreateTodoRequest createTodoRequest) throws UserCannotBeFoundException {
         CreateTodoResponse createTodoResponse = userService.createTodo(createTodoRequest);
         return new ResponseEntity<>(createTodoResponse, HttpStatus.CREATED);
     }
-    @PreAuthorize("hasRole('ROLE_USER')")
+
     @GetMapping("/id")
     public ResponseEntity<?> userCanFindTodoById(@RequestBody FindTodoByIdRequest findTodoByIdRequest) throws UserCannotBeFoundException {
         Todo foundTodo = userService.findTodoById(findTodoByIdRequest);
         return new ResponseEntity<>(foundTodo, HttpStatus.ACCEPTED);
     }
-    @PreAuthorize("hasRole('ROLE_USER')")
+
+
+
     @GetMapping("/all-todo")
-    public ResponseEntity<?> findAllTodos() throws UserCannotBeFoundException {
+    public ResponseEntity<?> findAllTodos() {
         return new ResponseEntity<>(userService.findAllTodos(), HttpStatus.ACCEPTED);
     }
-    @PreAuthorize("hasRole('ROLE_USER')")
+
     @DeleteMapping("/delete-todo")
     public ResponseEntity<?> deleteTodoById(DeleteTodoIdRequest deleteTodoIdRequest) throws UserCannotBeFoundException {
         DeleteTodoResponse deletedUsers = userService.deleteToDoById(deleteTodoIdRequest);
         return new ResponseEntity<>(deletedUsers, HttpStatus.ACCEPTED);
     }
-    @PreAuthorize("hasRole('ROLE_USER')")
+
     @PutMapping("{id}/profile-todo")
     public ResponseEntity<?> updateTodo(@RequestBody UpdateTodoRequest updateTodoRequest, @PathVariable Long id) throws UserCannotBeFoundException {
         UpdateTodoResponse updateTodo = userService.updateTodo(updateTodoRequest, id);
         return new ResponseEntity<>(updateTodo, HttpStatus.ACCEPTED);
 
     }
-    @PreAuthorize("hasRole('ROLE_USER')")
 
     @DeleteMapping("/delete-alltodo")
     public ResponseEntity<?> deleteAllTodo() {

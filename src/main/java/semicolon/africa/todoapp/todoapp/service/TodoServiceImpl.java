@@ -3,6 +3,7 @@ package semicolon.africa.todoapp.todoapp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import semicolon.africa.todoapp.todoapp.dao.model.Todo;
+import semicolon.africa.todoapp.todoapp.dao.model.User;
 import semicolon.africa.todoapp.todoapp.dao.repository.TodoRepository;
 import semicolon.africa.todoapp.todoapp.dto.request.CreateTodoRequest;
 import semicolon.africa.todoapp.todoapp.dto.request.UpdateTodoRequest;
@@ -25,7 +26,7 @@ public class TodoServiceImpl implements TodoService{
                 .build();
 //         .createdAt(new Date(System.currentTimeMillis()))
         new Date(System.currentTimeMillis());
-               return  todoRepository.save(todo);
+        return  todoRepository.save(todo);
     }
 
 
@@ -39,6 +40,8 @@ public class TodoServiceImpl implements TodoService{
             return todoDTOOptional.get();
         }
     }
+
+
 
 
     @Override
@@ -90,6 +93,8 @@ public class TodoServiceImpl implements TodoService{
        return todoRepository.findAll();
     }
 
+
+
     @Override
     public long sizeOfTodo() {
         return todoRepository.count();
@@ -100,6 +105,11 @@ public class TodoServiceImpl implements TodoService{
         todoRepository.deleteAll();
 
     }
+
+
+
+
+
 
 
 }
