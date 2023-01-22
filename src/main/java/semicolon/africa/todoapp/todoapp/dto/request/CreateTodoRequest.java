@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class CreateTodoRequest {
     private Long userId;
+    private Long todoId;
     private String todo;
     private String description;
      private boolean isCompleted;

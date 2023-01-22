@@ -10,7 +10,7 @@ import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 import java.util.List;
 
 public interface UserService {
-   User registerUser(User registerUser);
+   RegisterUserResponse registerUser(User registerUser);
 
     long getTotalUsers();
 
@@ -50,5 +50,5 @@ public interface UserService {
 
  String deleteTodoByIds(Long id);
 
- List <User> findUserByFirstName(String firstName) throws UserCannotBeFoundException;
+ User findUserByFirstName(String firstName) throws UserCannotBeFoundException;
 }

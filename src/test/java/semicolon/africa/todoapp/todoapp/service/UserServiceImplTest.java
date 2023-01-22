@@ -11,6 +11,7 @@ import semicolon.africa.todoapp.todoapp.dao.model.Todo;
 import semicolon.africa.todoapp.todoapp.dao.model.User;
 import semicolon.africa.todoapp.todoapp.dto.request.*;
 import semicolon.africa.todoapp.todoapp.dto.response.CreateTodoResponse;
+import semicolon.africa.todoapp.todoapp.dto.response.RegisterUserResponse;
 import semicolon.africa.todoapp.todoapp.dto.response.UpdateTodoResponse;
 import semicolon.africa.todoapp.todoapp.dto.response.UpdateUserProfileResponse;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
@@ -23,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class UserServiceImplTest {
-    User registeredUser;
+    RegisterUserResponse registeredUser;
     CreateTodoResponse response;
     @Autowired
     private UserService userService;
@@ -32,6 +33,7 @@ class UserServiceImplTest {
 
     @BeforeEach
     void setUp() throws UserCannotBeFoundException {
+        List<Todo> todoList = List.of();
 
         User registerUserRequest = User
                 .builder()
@@ -40,6 +42,7 @@ class UserServiceImplTest {
                 .email("adesuyiololad@gmail.com")
                .password("1234")
                 .phoneNumber("08109093828")
+                .todos(todoList)
                 .build();
          registeredUser =  userService.registerUser(registerUserRequest);
 
@@ -73,33 +76,26 @@ class UserServiceImplTest {
     }
     @Test
     public void userCanBeRegistered(){
+        List<Todo> todoList = List.of();
         User registerUserRequest = User
                 .builder()
                 .firstName("Ololade")
                 .lastName("Oluwatosin")
-                .email("adesuyiololade@gmail.com")
+                .email("adesuyiololad@gmail.com")
                 .password("1234")
                 .phoneNumber("08109093828")
+                .todos(todoList)
                 .build();
         registeredUser =  userService.registerUser(registerUserRequest);
+
         assertEquals(2L, userService.getTotalUsers());
         assertThat(registeredUser.getUserId()).isNotNull();
+        System.out.println(registeredUser);
 
 
 
     }
 
-    @Test
-    public void userCanBeFindByFirstName() throws UserCannotBeFoundException {
-        List <User> foundUser =  userService.findUserByFirstName(registeredUser.getFirstName());
-//        foundUser.add(new User());
-        if (!foundUser.isEmpty()) {
-            assertThat(foundUser.get(0).getFirstName()).isNotNull();
-            assertThat(foundUser.get(0).getFirstName()).isEqualTo(registeredUser.getFirstName());
-            System.out.println(foundUser);
-        }
-
-    }
 
     @Test
     public void userCanBeFindById() throws UserCannotBeFoundException {

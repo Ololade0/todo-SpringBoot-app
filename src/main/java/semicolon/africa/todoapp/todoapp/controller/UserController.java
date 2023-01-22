@@ -14,10 +14,7 @@ import semicolon.africa.todoapp.todoapp.dao.model.AuthToken;
 import semicolon.africa.todoapp.todoapp.dao.model.Todo;
 import semicolon.africa.todoapp.todoapp.dao.model.User;
 import semicolon.africa.todoapp.todoapp.dto.request.*;
-import semicolon.africa.todoapp.todoapp.dto.response.CreateTodoResponse;
-import semicolon.africa.todoapp.todoapp.dto.response.DeleteTodoResponse;
-import semicolon.africa.todoapp.todoapp.dto.response.UpdateTodoResponse;
-import semicolon.africa.todoapp.todoapp.dto.response.UpdateUserProfileResponse;
+import semicolon.africa.todoapp.todoapp.dto.response.*;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 import semicolon.africa.todoapp.todoapp.security.jwt.TokenProvider;
@@ -35,12 +32,12 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User registerUser) throws UnirestException {
-        User registeredUser = userService.registerUser(registerUser);
+        RegisterUserResponse registeredUser = userService.registerUser(registerUser);
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginRequestModel loginRequest) throws UserCannotBeFoundException {
+    public ResponseEntity<?> login(@RequestBody UserLoginRequestModel loginRequest)  {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
                         loginRequest.getPassword())
@@ -126,11 +123,7 @@ public class UserController {
 
     }
 
-    @GetMapping()
-    public ResponseEntity<?> getUsersByFirstName(@Param(value = "firstName") String firstName) throws UserCannotBeFoundException {
-        List<User> foundUser = userService.findUserByFirstName(firstName);
-        return new ResponseEntity<>(foundUser, HttpStatus.ACCEPTED);
-    }
+
 
 
 }

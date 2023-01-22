@@ -34,21 +34,45 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User registerUser(User registerUser) {
+    public RegisterUserResponse registerUser(User registerUser) {
 //        User foundEmail = userRepository.findByEmail(registerUser.getEmail());
 //        if (foundEmail != null) {
 //            throw new UserAlreadyExistException(UserAlreadyExistException.userAlreadyExistExecption(registerUser.getEmail()));
 //        }
+
+        List<Todo> todoList = new ArrayList<>();
+        for (int i = 0; i < registerUser.getTodos().size(); i++) {
+            CreateTodoRequest todo = new CreateTodoRequest();
+            todo.setTodoId((long) i);
+            todo.setDescription(registerUser.getTodos().get(i).getDescription());
+            todo.setTodo(registerUser.getTodos().get(i).getTodo());
+            todo.setCompleted(registerUser.getTodos().get(i).getIsCompleted());
+            Todo todo1 = todoService.createTodo(todo);
+            todoList.add(todo1);
+
+        }
+
+
         User user = User.builder()
                 .firstName(registerUser.getFirstName())
                 .lastName(registerUser.getLastName())
                 .email(registerUser.getEmail())
                 .phoneNumber(registerUser.getPhoneNumber())
                 .password(passwordEncoder.encode(registerUser.getPassword()))
+                .todos(todoList)
                 .roles(new HashSet<>())
                 .build();
         user.getRoles().add(new Role(RoleType.USER));
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        RegisterUserResponse registerUserResponse = RegisterUserResponse
+                .builder()
+                .userId(savedUser.getUserId())
+                .message("User successfully Registered")
+                .firstName(savedUser.getFirstName())
+                .lastName(savedUser.getLastName())
+                .todoList(savedUser.getTodos())
+                .build();
+        return registerUserResponse;
 
 
     }
@@ -170,8 +194,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<User> findUserByFirstName(String firstName) throws UserCannotBeFoundException {
-     List <User>foundUser =   userRepository.findByFirstName(firstName);
+    public User findUserByFirstName(String firstName) throws UserCannotBeFoundException {
+     User foundUser =   userRepository.findByFirstName(firstName);
      if(foundUser != null){
          return userRepository.findByFirstName(firstName);
 
