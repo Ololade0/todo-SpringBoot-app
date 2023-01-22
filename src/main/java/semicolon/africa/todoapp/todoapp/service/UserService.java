@@ -50,5 +50,5 @@ public interface UserService {
 
  String deleteTodoByIds(Long id);
 
-
+ List <User> findUserByFirstName(String firstName) throws UserCannotBeFoundException;
 }

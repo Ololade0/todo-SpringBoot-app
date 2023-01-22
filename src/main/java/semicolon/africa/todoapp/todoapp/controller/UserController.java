@@ -1,11 +1,10 @@
 package semicolon.africa.todoapp.todoapp.controller;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,7 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
@@ -125,6 +124,12 @@ public class AuthController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @GetMapping()
+    public ResponseEntity<?> getUsersByFirstName(@Param(value = "firstName") String firstName) throws UserCannotBeFoundException {
+        List<User> foundUser = userService.findUserByFirstName(firstName);
+        return new ResponseEntity<>(foundUser, HttpStatus.ACCEPTED);
     }
 
 

@@ -27,23 +27,22 @@ class UserServiceImplTest {
     CreateTodoResponse response;
     @Autowired
     private UserService userService;
-    @Autowired
-    private  PasswordEncoder passwordEncoder;
+
 
 
     @BeforeEach
     void setUp() throws UserCannotBeFoundException {
-//        RegisterUserRequest registerUserRequest = n
+
         User registerUserRequest = User
                 .builder()
                 .firstName("Ololade")
                 .lastName("Oluwatosin")
-                .email("adesuyiololade@gmail.com")
+                .email("adesuyiololad@gmail.com")
                .password("1234")
                 .phoneNumber("08109093828")
                 .build();
          registeredUser =  userService.registerUser(registerUserRequest);
-        System.out.println(registeredUser);
+
 
         CreateTodoRequest createTodoRequest = CreateTodoRequest
                 .builder()
@@ -83,14 +82,25 @@ class UserServiceImplTest {
                 .phoneNumber("08109093828")
                 .build();
         registeredUser =  userService.registerUser(registerUserRequest);
-
-      registeredUser =  userService.registerUser(registerUserRequest);
         assertEquals(2L, userService.getTotalUsers());
         assertThat(registeredUser.getUserId()).isNotNull();
 
 
 
     }
+
+    @Test
+    public void userCanBeFindByFirstName() throws UserCannotBeFoundException {
+        List <User> foundUser =  userService.findUserByFirstName(registeredUser.getFirstName());
+//        foundUser.add(new User());
+        if (!foundUser.isEmpty()) {
+            assertThat(foundUser.get(0).getFirstName()).isNotNull();
+            assertThat(foundUser.get(0).getFirstName()).isEqualTo(registeredUser.getFirstName());
+            System.out.println(foundUser);
+        }
+
+    }
+
     @Test
     public void userCanBeFindById() throws UserCannotBeFoundException {
        User foundUser =  userService.findUserById(registeredUser.getUserId());

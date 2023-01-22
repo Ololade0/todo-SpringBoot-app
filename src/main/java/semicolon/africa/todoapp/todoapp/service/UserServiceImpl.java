@@ -17,7 +17,6 @@ import semicolon.africa.todoapp.todoapp.dao.repository.UserRepository;
 import semicolon.africa.todoapp.todoapp.dto.request.*;
 import semicolon.africa.todoapp.todoapp.dto.response.*;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
-import semicolon.africa.todoapp.todoapp.exception.UserAlreadyExistException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 
 import java.util.*;
@@ -36,10 +35,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User registerUser(User registerUser) {
-        User foundEmail = userRepository.findByEmail(registerUser.getEmail());
-        if (foundEmail != null) {
-            throw new UserAlreadyExistException(UserAlreadyExistException.userAlreadyExistExecption(registerUser.getEmail()));
-        }
+//        User foundEmail = userRepository.findByEmail(registerUser.getEmail());
+//        if (foundEmail != null) {
+//            throw new UserAlreadyExistException(UserAlreadyExistException.userAlreadyExistExecption(registerUser.getEmail()));
+//        }
         User user = User.builder()
                 .firstName(registerUser.getFirstName())
                 .lastName(registerUser.getLastName())
@@ -169,6 +168,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         todoService.deleteById(id);
         return "All todo successfully deleted";
     }
+
+    @Override
+    public List<User> findUserByFirstName(String firstName) throws UserCannotBeFoundException {
+     List <User>foundUser =   userRepository.findByFirstName(firstName);
+     if(foundUser != null){
+         return userRepository.findByFirstName(firstName);
+
+     }
+     throw new UserCannotBeFoundException("UserCannot be found");
+
+    }
+
+
 
 
     private UserLoginResponse buildSuccessfulLoginResponse(User user) {
