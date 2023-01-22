@@ -19,7 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 //@ToString
 @Builder
-@Entity(name = "user")
+@Entity(name = "users")
 @Validated()
 
 public class User  {
@@ -37,12 +37,12 @@ public class User  {
     private String password;
     private boolean isEnabled;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Todo> todoList = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
-     public User(String firstName, String lastName, String email, String phoneNumber, String password, RoleType roleType) {
+    public User(String firstName, String lastName, String email, String phoneNumber, String password, RoleType roleType) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

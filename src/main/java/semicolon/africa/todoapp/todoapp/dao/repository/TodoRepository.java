@@ -8,4 +8,8 @@ import semicolon.africa.todoapp.todoapp.dao.model.Todo;
 public interface TodoRepository extends JpaRepository<Todo, Long> {
     Todo findFirstByTodo(String todo);
 
+//    SELECT * FROM users
+//    JOIN todo ON users.user_id = todo.user_id
+//    WHERE users.username = 'user_input'
+
 }
