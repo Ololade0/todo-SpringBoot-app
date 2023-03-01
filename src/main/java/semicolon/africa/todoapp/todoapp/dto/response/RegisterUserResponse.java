@@ -13,6 +13,7 @@ import java.util.List;
 @ToString
 public class RegisterUserResponse {
     private Long userId;
+    private Long todoId;
     private String message;
     private String firstName;
     private String lastName;

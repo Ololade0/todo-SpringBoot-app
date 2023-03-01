@@ -23,10 +23,10 @@ public class SetUpDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        if (userRepository.findUserByEmail("ades@gmail.com").isEmpty()){
-            User user = new User("Adesuyi", "Ololade","adesuuser@gmail.com", passwordEncoder.encode("password1234#"), "1234", RoleType.ADMIN);
-            userRepository.save(user);
-        }
+//        if (userRepository.findUserByEmail("ades@gmail.com").isEmpty()){
+//            User user = new User("Adesuyi", "Ololade","adesuuser@gmail.com", passwordEncoder.encode("password1234#"), "1234", RoleType.ADMIN);
+//            userRepository.save(user);
+//        }
     }
 
 }

@@ -17,6 +17,7 @@ import semicolon.africa.todoapp.todoapp.dao.repository.UserRepository;
 import semicolon.africa.todoapp.todoapp.dto.request.*;
 import semicolon.africa.todoapp.todoapp.dto.response.*;
 import semicolon.africa.todoapp.todoapp.exception.TodoException;
+import semicolon.africa.todoapp.todoapp.exception.UserAlreadyExistException;
 import semicolon.africa.todoapp.todoapp.exception.UserCannotBeFoundException;
 
 import java.util.*;
@@ -35,18 +36,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public RegisterUserResponse registerUser(User registerUser) {
-//        User foundEmail = userRepository.findByEmail(registerUser.getEmail());
-//        if (foundEmail != null) {
-//            throw new UserAlreadyExistException(UserAlreadyExistException.userAlreadyExistExecption(registerUser.getEmail()));
-//        }
+        User foundEmail = userRepository.findByEmail(registerUser.getEmail());
+        if (foundEmail != null) {
+            throw new UserAlreadyExistException(UserAlreadyExistException.userAlreadyExistExecption(registerUser.getEmail()));
+        }
 
         List<Todo> todoList = new ArrayList<>();
         for (int i = 0; i < registerUser.getTodos().size(); i++) {
             CreateTodoRequest todo = new CreateTodoRequest();
-            todo.setTodoId((long) i);
+            todo.setTodoId(Long.valueOf(i));
             todo.setDescription(registerUser.getTodos().get(i).getDescription());
             todo.setTodo(registerUser.getTodos().get(i).getTodo());
             todo.setCompleted(registerUser.getTodos().get(i).getIsCompleted());
+//            todo.setUserId(registerUser.getTodos().get(i).getUser().getUserId());
             Todo todo1 = todoService.createTodo(todo);
             todoList.add(todo1);
 
@@ -64,7 +66,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .build();
         user.getRoles().add(new Role(RoleType.USER));
         User savedUser = userRepository.save(user);
-        RegisterUserResponse registerUserResponse = RegisterUserResponse
+        return RegisterUserResponse
                 .builder()
                 .userId(savedUser.getUserId())
                 .message("User successfully Registered")
@@ -72,9 +74,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .lastName(savedUser.getLastName())
                 .todoList(savedUser.getTodos())
                 .build();
-        return registerUserResponse;
-
-
     }
 
     @Override
